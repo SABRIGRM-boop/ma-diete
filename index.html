@@ -14,9 +14,12 @@
   // Depuis l'icône de l'écran d'accueil, l'adresse contient ?go=1 : on part droit vers l'app.
   // Sinon on reste ici, et l'adresse prend ?go=1 pour que le raccourci créé l'emporte avec lui.
   var APP = "https://claude.ai/artifact/RWN4Sc2stWUzT7A7r86Ufv";
+  // Sur iPhone, jamais de redirection vers claude.ai : la page dédiée reste affichée pour l'ajout à l'écran d'accueil.
+  var isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   // Un rechargement ou un retour arrière ne repart jamais : la page d'installation reste affichée.
   var nav = (performance.getEntriesByType && performance.getEntriesByType("navigation")[0] || {}).type;
-  if (new URLSearchParams(location.search).has("go") && nav !== "reload" && nav !== "back_forward") location.replace(APP);
+  if (isIos) location.replace("iphone.html");
+  else if (new URLSearchParams(location.search).has("go") && nav !== "reload" && nav !== "back_forward") location.replace(APP);
   else history.replaceState(null, "", "?go=1");
 </script>
 <style>
