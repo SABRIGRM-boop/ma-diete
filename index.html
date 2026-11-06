@@ -14,7 +14,9 @@
   // Depuis l'icône de l'écran d'accueil, l'adresse contient ?go=1 : on part droit vers l'app.
   // Sinon on reste ici, et l'adresse prend ?go=1 pour que le raccourci créé l'emporte avec lui.
   var APP = "https://claude.ai/artifact/RWN4Sc2stWUzT7A7r86Ufv";
-  if (new URLSearchParams(location.search).has("go")) location.replace(APP);
+  // Un rechargement ou un retour arrière ne repart jamais : la page d'installation reste affichée.
+  var nav = (performance.getEntriesByType && performance.getEntriesByType("navigation")[0] || {}).type;
+  if (new URLSearchParams(location.search).has("go") && nav !== "reload" && nav !== "back_forward") location.replace(APP);
   else history.replaceState(null, "", "?go=1");
 </script>
 <style>
@@ -30,6 +32,8 @@
   ol{margin:0;padding:16px 16px 16px 38px;background:#fff;border-radius:18px;box-shadow:0 3px 14px rgba(120,40,80,.08);display:flex;flex-direction:column;gap:10px}
   .note{font-size:15px;color:var(--mute)}
   a.open{display:flex;align-items:center;justify-content:center;min-height:54px;border-radius:16px;background:linear-gradient(135deg,#D9145F,#E2500B);color:#fff;font-weight:700;text-decoration:none}
+  .stack{display:flex;flex-direction:column;gap:14px}
+  summary{cursor:pointer;font-weight:600}
   [hidden]{display:none}
 </style>
 </head>
@@ -39,13 +43,19 @@
   <h1>Ma Diète</h1>
   <p class="lead">Installe l'app : l'icône D est déjà prête.</p>
 
-  <ol id="ios" hidden>
-    <li>Vérifie que tu es dans <b>Safari</b>.</li>
-    <li>Appuie sur le bouton <b>Partager</b> (le carré avec une flèche vers le haut).</li>
-    <li>Choisis <b>Sur l'écran d'accueil</b>.</li>
-    <li>Si tu vois « Ouvrir comme app web », désactive-le.</li>
-    <li>Appuie sur <b>Ajouter</b>.</li>
-  </ol>
+  <div id="ios" class="stack" hidden>
+    <a class="open" href="ma-diete.mobileconfig">Installer avec l'icône D</a>
+    <ol>
+      <li>Dans <b>Safari</b>, appuie sur le bouton ci-dessus, puis sur <b>Autoriser</b>.</li>
+      <li>Ouvre l'app <b>Réglages</b> et appuie sur <b>Profil téléchargé</b>, tout en haut.</li>
+      <li>Appuie sur <b>Installer</b> en haut à droite, entre ton code, puis confirme.</li>
+      <li>L'icône D est sur ton écran d'accueil.</li>
+    </ol>
+    <p class="note">iPhone affichera « Non signé » : c'est normal pour un profil personnel. Il ne fait qu'ajouter l'icône, et tu peux le retirer dans Réglages, Général, VPN et gestion de l'appareil.</p>
+    <details class="note"><summary>Autre méthode, sans profil</summary>
+      <p>Dans Safari, sur cette page : bouton <b>Partager</b>, puis <b>Sur l'écran d'accueil</b>. Si tu vois « Ouvrir comme app web », désactive-le, puis appuie sur <b>Ajouter</b>.</p>
+    </details>
+  </div>
   <ol id="android" hidden>
     <li>Vérifie que tu es dans <b>Chrome</b>.</li>
     <li>Appuie sur le menu <b>⋮</b> en haut à droite.</li>
